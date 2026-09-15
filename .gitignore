@@ -1,0 +1,8 @@
+node_modules/
+infra/.env
+n8n/config.local.json
+n8n/workflows/
+testdata/saida/
+entrega/
+*.log
+.DS_Store

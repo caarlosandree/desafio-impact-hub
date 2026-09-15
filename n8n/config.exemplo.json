@@ -1,0 +1,21 @@
+{
+  "configuracao": {
+    "modelo_gemini": "gemini-3.5-flash-lite",
+    "planilha_id": "COLE_O_ID_DA_PLANILHA",
+    "pasta_raiz_id": "COLE_O_ID_DA_PASTA_NF",
+    "emissao_max_dias": 180,
+    "vencimento_max_dias": 120,
+    "imagem_min_kb": 30,
+    "varredura_idade_min_minutos": 60,
+    "emails_alerta": "dono.tecnico@empresa.com.br, substituto.tecnico@empresa.com.br",
+    "remetente_alertas": "nf-automacao@empresa.com.br",
+    "n8n_url": "https://n8n.empresa.com.br",
+    "sinal_de_vida_hora": 8,
+    "formulario_empresas": ["Colmeia", "Trampolim", "Maré"],
+    "simular_falha_registro": false
+  },
+  "gatilhos": {
+    "gmail_minutos": 5,
+    "varredura_cron": "0 0 8-19 * * *"
+  }
+}
