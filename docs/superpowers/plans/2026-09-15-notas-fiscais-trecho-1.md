@@ -37,6 +37,7 @@
 7. **Gatilhos em teste.** A configuração local da bateria usa Gmail a cada 1 minuto, varredura a cada 5 minutos e idade mínima de 5 minutos. A configuração de entrega mantém 5 minutos, `0 0 8-19 * * *` e 60 minutos, como na spec.
 8. **`n8n_url`, `remetente_alertas`, `sinal_de_vida_hora` e `formulario_empresas`** entram no node `Configuração`, porque o link da execução, o remetente SMTP, a hora do sinal de vida e a lista do formulário precisam deles.
 9. **`N8N_RUNNERS_ENABLED`.** O n8n 2.38.7 avisa no log que a variável não é mais necessária (os runners já vêm ligados). Ela fica no compose por constar da spec e não tem efeito.
+10. **`nomeSeguroArquivo` (Tarefa 7).** O regex do plano trazia os caracteres de controle como bytes literais (o que também fazia o `grep` tratar este arquivo como binário). Na implementação eles viraram os escapes `\x00-\x1f`, com o mesmo comportamento.
 
 ## Fatos conferidos na imagem 2.38.7 (15/09/2026), que sustentam o plano
 
@@ -152,7 +153,7 @@ Escolher um e-mail **fora** da caixa de teste para receber alertas e o sinal de 
 **Interfaces:**
 - Produces: `npm test` (roda `node --test test/`), n8n em `http://localhost:5678`, container `nf-n8n`.
 
-- [ ] **Passo 1: Criar `package.json`**
+- [x] **Passo 1: Criar `package.json`**
 
 `package.json`:
 ```json
@@ -182,7 +183,7 @@ Escolher um e-mail **fora** da caixa de teste para receber alertas e o sinal de 
 }
 ```
 
-- [ ] **Passo 2: Criar `.gitignore`**
+- [x] **Passo 2: Criar `.gitignore`**
 
 `.gitignore`:
 ```
@@ -196,7 +197,7 @@ entrega/
 .DS_Store
 ```
 
-- [ ] **Passo 3: Criar `infra/docker-compose.yml`**
+- [x] **Passo 3: Criar `infra/docker-compose.yml`**
 
 `infra/docker-compose.yml`:
 ```yaml
@@ -229,7 +230,7 @@ volumes:
   n8n_data:
 ```
 
-- [ ] **Passo 4: Criar `infra/.env.exemplo`**
+- [x] **Passo 4: Criar `infra/.env.exemplo`**
 
 `infra/.env.exemplo`:
 ```
@@ -246,7 +247,7 @@ N8N_MEMBRO_EMAIL=
 N8N_MEMBRO_SENHA=
 ```
 
-- [ ] **Passo 5: Criar `n8n/config.exemplo.json`**
+- [x] **Passo 5: Criar `n8n/config.exemplo.json`**
 
 `n8n/config.exemplo.json`:
 ```json
@@ -273,7 +274,7 @@ N8N_MEMBRO_SENHA=
 }
 ```
 
-- [ ] **Passo 6: Instalar dependências e subir o n8n**
+- [x] **Passo 6: Instalar dependências e subir o n8n**
 
 Run: `npm install && npx playwright install chromium && cp infra/.env.exemplo infra/.env && docker compose -f infra/docker-compose.yml up -d`
 Depois: `curl -s http://localhost:5678/healthz`
@@ -285,7 +286,7 @@ Expected: `{"status":"ok"}` (pode levar ~30 s na primeira subida).
 2. Settings → Users → Invite: convidar `desafioimphub+financeiro@gmail.com` como **Member**, copiar o link do convite, abrir numa janela anônima, definir a senha e gravar em `N8N_MEMBRO_EMAIL`/`N8N_MEMBRO_SENHA`.
 3. Se a edição community não oferecer convite de membro, anotar no `testes/execucao.md` ("n8n User Auth indisponível; formulário usará Basic Auth") e aplicar a variante Basic Auth descrita na Tarefa 10, Passo 6.
 
-- [ ] **Passo 8: Commit**
+- [x] **Passo 8: Commit**
 
 ```bash
 git add package.json package-lock.json .gitignore infra/docker-compose.yml infra/.env.exemplo n8n/config.exemplo.json
@@ -307,7 +308,7 @@ git commit -m "chore: estrutura do projeto e n8n 2.38.7 em Docker"
   - `linhasValidas(linhas): object[]` (remove itens vazios e itens com `error`)
   - `calcularDvCnpj(base12): string`, `validarCnpj(v): boolean`, `ehCpf(v): boolean`, `mascararCpf(v): string|null`, `documentoParaGravar(v): string`
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 `test/lib/texto.test.cjs`:
 ```js
@@ -414,12 +415,12 @@ test('CPF é detectado e mascarado sem expor os dígitos das pontas', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/`
 Expected: FAIL com `Cannot find module '../../src/lib/texto.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/texto.cjs`:
 ```js
@@ -571,12 +572,12 @@ function documentoParaGravar(valor) {
 module.exports = { calcularDvCnpj, validarCnpj, ehCpf, mascararCpf, documentoParaGravar }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS em todos os testes (0 falhas).
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/texto.cjs src/lib/datas.cjs src/lib/linhas.cjs src/lib/cnpj.cjs test/lib/
@@ -600,7 +601,7 @@ git commit -m "feat: utilitários de texto, datas e validação de CNPJ alfanum�
   - `lerXmlNfse(texto): { tipo: 'nfse', nota: Nota } | { tipo: 'evento' } | { tipo: 'desconhecido' }`
   - `Nota` (formato canônico usado por todas as tarefas seguintes): `{ tipo:'nfse', numero, chave_acesso, data_emissao, competencia, prestador_documento, prestador_nome, tomador_cnpj, tomador_nome, descricao_servico, valor_servico, retencoes_total, valor_liquido, chave_nota_substituida, vencimento, vencimento_trecho }` (strings ou `null`; valores `number|null`; datas `AAAA-MM-DD|null`; chave sem o prefixo `NFS`).
 
-- [ ] **Passo 1: Escrever o teste que falha**
+- [x] **Passo 1: Escrever o teste que falha**
 
 `test/lib/xml-nfse.test.cjs`:
 ```js
@@ -685,12 +686,12 @@ test('lerXmlNfse reconhece evento e XML desconhecido', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/xml-nfse.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/xml.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/xml.cjs`:
 ```js
@@ -853,12 +854,12 @@ function lerXmlNfse(texto) {
 module.exports = { NS_NFSE, lerXmlNfse, chaveSemPrefixo }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/xml.cjs src/lib/xml-nfse.cjs test/lib/xml-nfse.test.cjs
@@ -884,7 +885,7 @@ git commit -m "feat: leitura do XML nacional da NFS-e sem dependências"
   - `triarAnexos(pacote, config): Pacote & { ignorados: string[], motivos_arquivo: string[] }`
   - `decidirPorHashes(pacote, linhasArquivos, linhasNotas)`: pacote com `acao` ∈ `ler|retomada_total|duplicata_arquivo`; `retomada_total` traz `etiqueta` e `notas_existentes: [{id, numero, status, motivos}]`; `duplicata_arquivo` traz `nota_id_existente` e `numero_existente`.
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 `test/lib/entrada.test.cjs`:
 ```js
@@ -1046,12 +1047,12 @@ test('decidirPorHashes descarta só os arquivos já registrados por outra origem
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/entrada.test.cjs test/lib/triagem.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/entrada.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/entrada.cjs`:
 ```js
@@ -1227,12 +1228,12 @@ function decidirPorHashes(pacote, linhasArquivos, linhasNotas) {
 module.exports = { tipoDoAnexo, triarAnexos, decidirPorHashes }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/entrada.cjs src/lib/gmail.cjs src/lib/triagem.cjs test/lib/entrada.test.cjs test/lib/triagem.test.cjs
@@ -1258,7 +1259,7 @@ git commit -m "feat: padronização da entrada, etiquetas e triagem por hash"
   - `consolidar(pacote, leituraIa|null, modelo): { notas: NotaConsolidada[], linha_propria: {motivos: string[], arquivos_ligados} | null }`
   - `NotaConsolidada` = `Nota` + `lido_por`, `arquivo_chave`, `arquivos_ligados: [{chave, tipo: 'xml'|'nota'|'boleto'|'anexo'}]`, `vencimento_fonte: ''|'Formulário'|'Boleto'|'Corpo do e-mail'|'Nota'`, `observacoes: string[]` (códigos)
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 `test/lib/fixtures.cjs`:
 ```js
@@ -1539,12 +1540,12 @@ test('IA lendo de novo a nota do XML não gera nota repetida', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/leitura.test.cjs test/lib/gemini.test.cjs test/lib/consolidacao.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/leitura.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/leitura.cjs`:
 ```js
@@ -1824,7 +1825,7 @@ function consolidar(pacote, leituraIa, modelo) {
 module.exports = { consolidar }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
@@ -1844,7 +1845,7 @@ fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-
 Expected: a lista contém `models/gemini-3.5-flash-lite` e a resposta traz `candidates[0].content.parts[0].text` com JSON contendo `"vencimento_corpo_email":{"data":"2026-09-20"…}`.
 Se o modelo não existir, trocar `modelo_gemini` nos arquivos de configuração pelo nome `flash-lite` mais recente da lista. Se a API recusar `responseFormat`, trocar em `montarPedidoGemini` por `generationConfig: { temperature: 0, responseMimeType: 'application/json', responseJsonSchema: GEMINI_ESQUEMA }`, ajustar a asserção correspondente em `test/lib/gemini.test.cjs` e repetir.
 
-- [ ] **Passo 6: Commit**
+- [x] **Passo 6: Commit**
 
 ```bash
 git add src/lib/leitura.cjs src/lib/gemini.cjs src/lib/consolidacao.cjs test/lib/fixtures.cjs test/lib/leitura.test.cjs test/lib/gemini.test.cjs test/lib/consolidacao.test.cjs
@@ -1869,7 +1870,7 @@ git commit -m "feat: leitura de PDFs, pedido estruturado ao Gemini e consolidaç
   - `chaveDuplicidade(nota, origemId, indice, sha256): string`, `idDaChave(chave, sha256): string` (8 hex)
   - `decidirDuplicidade(nota, chave, origemId, linhasNotas, sha256): { acao: 'nova'|'retomada'|'duplicata', existente: object|null }`
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 `test/lib/validacao.test.cjs`:
 ```js
@@ -2007,12 +2008,12 @@ test('mesmo número de outro fornecedor não colide', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/validacao.test.cjs test/lib/duplicidade.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/validacao.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/validacao.cjs`:
 ```js
@@ -2142,12 +2143,12 @@ function decidirDuplicidade(nota, chave, origemId, linhasNotas, sha256) {
 module.exports = { chaveDuplicidade, idDaChave, decidirDuplicidade }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/validacao.cjs src/lib/duplicidade.cjs test/lib/validacao.test.cjs test/lib/duplicidade.test.cjs
@@ -2172,7 +2173,7 @@ git commit -m "feat: regras de validação e duplicidade da nota"
   - `planoSemLeitura(decisaoDeHash): Plano`
   - `montarLinhas(plano, links, { agora, linkExecucao }): { notas: object[], arquivos: object[], ocorrencias: object[] }`
 
-- [ ] **Passo 1: Escrever os testes que falham**
+- [x] **Passo 1: Escrever os testes que falham**
 
 `test/lib/drive.test.cjs`:
 ```js
@@ -2363,12 +2364,12 @@ test('montarLinhas grava ocorrências com data e link da execução', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/drive.test.cjs test/lib/registro.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/drive.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/drive.cjs`:
 ```js
@@ -2448,7 +2449,7 @@ function extensaoDoArquivo(anexo) {
 }
 
 function nomeSeguroArquivo(texto) {
-  return String(texto ?? '').replace(/[\\/:*?"<>| -]/g, '_').trim() || 'arquivo';
+  return String(texto ?? '').replace(/[\\/:*?"<>|\x00-\x1f]/g, '_').trim() || 'arquivo';
 }
 
 function colunasDeOrigem(pacote) {
@@ -2621,12 +2622,12 @@ function montarLinhas(plano, links, contexto) {
 module.exports = { planejarRegistro, planoSemLeitura, montarLinhas }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/drive.cjs src/lib/registro.cjs test/lib/drive.test.cjs test/lib/registro.test.cjs
@@ -2653,7 +2654,7 @@ git commit -m "feat: planejamento do registro no Drive, na planilha e no Gmail"
   - `alertaErrorWorkflow(dadosDoErrorTrigger): { assunto, texto }`
   - `mensagemFormulario(resumos: [{ falha: boolean, resultado: Plano['resultado'] }]): string`
 
-- [ ] **Passo 1: Escrever o teste que falha**
+- [x] **Passo 1: Escrever o teste que falha**
 
 `test/lib/alertas.test.cjs`:
 ```js
@@ -2732,12 +2733,12 @@ test('mensagemFormulario resume cada situação', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/lib/alertas.test.cjs`
 Expected: FAIL com `Cannot find module '../../src/lib/alertas.cjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `src/lib/alertas.cjs`:
 ```js
@@ -2840,12 +2841,12 @@ function mensagemFormulario(resumos) {
 module.exports = { linkDaExecucao, mensagemDoErro, ocorrenciaErroTecnico, alertaErroTecnico, contarErrosRecentes, textoSinalDeVida, alertaErrorWorkflow, mensagemFormulario }; // @node-only
 ```
 
-- [ ] **Passo 4: Rodar e ver passar**
+- [x] **Passo 4: Rodar e ver passar**
 
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Commit**
+- [x] **Passo 5: Commit**
 
 ```bash
 git add src/lib/alertas.cjs test/lib/alertas.test.cjs
