@@ -93,3 +93,5 @@
 | 16/09/2026, 09:36:25 | T26 | 1º envio: "Envio processado Não foi possível concluir o envio por uma falha técnica. O dono técnico j" → reenvio: "Envio processado Nota 480: já estava registrada (status Extraída)." | ok |
 | 16/09/2026, 09:44:31 | T22 | 1300: Extraída · etiquetas: NF/processada · confirmar no e-mail de alertas o "[NF] Sinal de vida" com as contagens | ok |
 | 16/09/2026, 09:56:22 | Error Workflow | planilha_id trocado por id-inexistente e T15 reenviado: execuções 380 (Gmail, 09:46) e 382 (varredura, 09:50) pararam em "Ler empresas" com 404; chegaram dois alertas "[NF] Falha inesperada no workflow" com o node e o link; o e-mail ficou sem etiqueta. Após restaurar o planilha_id, a varredura das 09:55 processou o e-mail: NF/duplicada, ocorrência DUPLICATA_ARQUIVO (reenvio do T15), sem linha nova | ok |
+
+**Entrega enviada:** 16/09/2026, 10:51:20, pelo formulário da Impact Hub, com o link da pasta pública https://drive.google.com/drive/folders/1pUHDMMfo45BpeM1fbLxcS39-c-AhS6Ap (código em https://github.com/caarlosandree/desafio-impact-hub).
