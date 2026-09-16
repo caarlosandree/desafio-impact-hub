@@ -17,6 +17,9 @@ const apoio = path.join(RAIZ, 'n8n/definicoes/apoio.mjs');
 if (!entrega && existsSync(apoio)) definicoes.push(['NF-apoio-aos-testes.json', (await import(apoio)).definirApoio]);
 
 for (const [nome, definir] of definicoes) {
-  writeFileSync(path.join(destino, nome), `${JSON.stringify(definir(config).json(), null, 2)}\n`);
+  const workflow = definir(config).json();
+  // localmente os workflows ficam visíveis ao MCP do n8n; a entrega sai sem essa opção
+  if (!entrega) workflow.settings = { ...workflow.settings, availableInMCP: true };
+  writeFileSync(path.join(destino, nome), `${JSON.stringify(workflow, null, 2)}\n`);
 }
 console.log(`${definicoes.length} workflow(s) em ${path.relative(RAIZ, destino)} usando ${path.relative(RAIZ, arquivoConfig)}`);

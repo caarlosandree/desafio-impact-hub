@@ -17,7 +17,7 @@
 
 O trecho 1 completo, da chegada do e-mail ao registro da nota: três entradas (Gmail, formulário autenticado e varredura horária), leitura direta do XML nacional, leitura de PDF e imagem com Gemini, 16 regras de validação, duplicidade por hash do arquivo e por chave da nota, registro em Planilhas, Drive e etiquetas, tratamento de falha em duas camadas e sinal de vida diário. Os trechos 2 (aprovação no WhatsApp) e 3 (visibilidade) estão desenhados.
 
-**Resultado da bateria:** preencher com o número final de `testes/execucao.md`, no formato "26 de 26 casos da spec aprovados, mais o teste de injeção e o do Error Workflow".
+**Resultado da bateria:** 26 de 26 casos da spec aprovados na rodada final de 16/09 (08:35 às 09:44), mais o teste de injeção e o do Error Workflow. A tabela em `5-notas-de-teste/` guarda também as rodadas anteriores, com as falhas que viraram correção.
 
 ## Premissas (resumo)
 

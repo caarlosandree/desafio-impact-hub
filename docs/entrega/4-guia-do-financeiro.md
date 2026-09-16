@@ -63,7 +63,7 @@ Você não precisa mais baixar PDF nem digitar número, valor e vencimento. Seu 
 
 Use quando a nota não chegou por e-mail: baixada de um portal, recebida por outro canal, ou reenviada depois de uma revisão.
 
-1. Acesse o endereço do formulário (está nos favoritos do navegador do financeiro) e entre com o seu usuário.
+1. Acesse o endereço do formulário (está nos favoritos do navegador do financeiro) e entre com o seu usuário. Na primeira vez, o n8n pergunta se o formulário pode rodar com o seu login ("wants to run using your n8n login"): clique em **Allow access**.
 2. Escolha a **Empresa**.
 3. Em **Arquivos da nota**, selecione o PDF, o XML ou a foto. Pode mandar mais de um arquivo, inclusive o boleto.
 4. Se souber o vencimento, preencha **Vencimento**. Ele vale para todas as notas do envio.

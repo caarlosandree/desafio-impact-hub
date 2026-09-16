@@ -18,6 +18,12 @@ export async function enviarFormulario({ empresa, arquivos, vencimento, observac
     await pagina.waitForURL((url) => !url.pathname.includes('signin'), { timeout: 30000 });
     await pagina.goto(`${BASE}/form/nf-envio`);
     await pagina.waitForLoadState('networkidle');
+    // O n8n pede consentimento para o formulário rodar com o login de quem o abre.
+    const consentir = pagina.getByRole('button', { name: 'Allow access' });
+    if (await consentir.isVisible()) {
+      await consentir.click();
+      await pagina.waitForLoadState('networkidle');
+    }
     const alvo = (await pagina.locator('iframe').count()) > 0 ? pagina.frameLocator('iframe').first() : pagina;
     await alvo.locator('select').first().selectOption(empresa);
     await alvo.locator('input[type="file"]').first().setInputFiles(arquivos.map((nome) => path.join(RAIZ_PROJETO, 'testdata/saida/arquivos', nome)));

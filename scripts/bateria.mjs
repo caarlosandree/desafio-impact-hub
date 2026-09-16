@@ -64,9 +64,11 @@ async function rodarGrupo(grupo) {
   }
 }
 
-const implantarCom = (...ajustes) => {
+// logo depois do reinício o n8n ainda derruba conexões; a pausa evita falhas que não são do fluxo
+const implantarCom = async (...ajustes) => {
   rodar('node', ['scripts/configurar-local.mjs', ...ajustes]);
   rodar('bash', ['scripts/implantar.sh']);
+  await esperar(20000);
 };
 
 const PROCEDIMENTOS = {
@@ -84,13 +86,13 @@ const PROCEDIMENTOS = {
     registrar('T19', `1ª: ${resumir(ctx)} → após corrigir e tirar NF/erro: ${resumir(depois.ctx)} · confirmar alerta no e-mail de alertas`, falhas);
   },
   async T20() {
-    implantarCom('simular_falha_registro=true');
+    await implantarCom('simular_falha_registro=true');
     await enviarCaso(caso('T20'));
     const { ctx } = await aguardarEtiqueta('T20', 'NF/erro');
     const falhas = [];
     if (ctx.notas.length !== 1) falhas.push(`1ª execução deveria gravar a linha: ${ctx.notas.length}`);
     if (ctx.arquivos.length) falhas.push('1ª execução gravou hashes');
-    implantarCom('simular_falha_registro=false');
+    await implantarCom('simular_falha_registro=false');
     await reprocessar('[T20]');
     const depois = await aguardarEtiqueta('T20', 'NF/processada', 15);
     if (depois.ctx.arquivos.length !== 2) falhas.push(`hashes após reprocessar: ${depois.ctx.arquivos.length}`);
@@ -111,7 +113,7 @@ const PROCEDIMENTOS = {
     registrar('T21', `página: "${texto.replace(/\s+/g, ' ').slice(0, 120)}" · linha: ${nota?.status}, ${nota?.origem}, ${nota?.vencimento_fonte}, enviado_por ${nota?.enviado_por}`, falhas);
   },
   async T26() {
-    implantarCom('simular_falha_registro=true');
+    await implantarCom('simular_falha_registro=true');
     const primeiro = await enviarFormulario({ empresa: 'Maré', arquivos: ['nfse-480-n480.xml'] });
     let atual = await estado();
     const falhas = [];
@@ -119,7 +121,7 @@ const PROCEDIMENTOS = {
     if (!primeiro.includes('falha técnica')) falhas.push(`1ª página: ${primeiro.slice(0, 200)}`);
     if (!linha) falhas.push('1º envio não gravou a linha');
     if (!atual.ocorrencias.some((o) => o.tipo === 'ERRO_TECNICO' && String(o.origem_id) === String(linha?.origem_id))) falhas.push('sem ERRO_TECNICO do formulário');
-    implantarCom('simular_falha_registro=false');
+    await implantarCom('simular_falha_registro=false');
     const segundo = await enviarFormulario({ empresa: 'Maré', arquivos: ['nfse-480-n480.xml'] });
     atual = await estado();
     if (!segundo.includes('Nota 480: já estava registrada')) falhas.push(`2ª página: ${segundo.slice(0, 200)}`);
@@ -135,10 +137,10 @@ const PROCEDIMENTOS = {
     console.log('T22 enviado com o fluxo parado; aguardando 6 minutos para passar da idade mínima…');
     await esperar(6 * 60000);
     const hora = Number(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo', hour: 'numeric', hourCycle: 'h23' }));
-    implantarCom(`sinal_de_vida_hora=${hora}`);
+    await implantarCom(`sinal_de_vida_hora=${hora}`);
     const { ctx } = await aguardarEtiqueta('T22', 'NF/processada', 12);
     const falhas = ctx.notas.length === 1 ? [] : [`linhas ${ctx.notas.length}`];
-    implantarCom('sinal_de_vida_hora=8');
+    await implantarCom('sinal_de_vida_hora=8');
     registrar('T22', `${resumir(ctx)} · confirmar no e-mail de alertas o "[NF] Sinal de vida" com as contagens`, falhas);
   },
 };
