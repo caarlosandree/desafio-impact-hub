@@ -1,5 +1,5 @@
 const { mesDe } = require('./datas.cjs'); // @node-only
-const { documentoParaGravar } = require('./cnpj.cjs'); // @node-only
+const { documentoParaGravar, chaveParaGravar } = require('./cnpj.cjs'); // @node-only
 const { linhasValidas } = require('./linhas.cjs'); // @node-only
 const { validarNota, criarMotivo, formatarMotivos, formatarObservacoes, juntarObservacao } = require('./validacao.cjs'); // @node-only
 const { chaveDuplicidade, idDaChave, decidirDuplicidade } = require('./duplicidade.cjs'); // @node-only
@@ -37,7 +37,7 @@ function linhaDaNota(nota, { id, chave, status, motivos, pacote }) {
     prestador_nome: nota.prestador_nome ?? '',
     prestador_documento: documentoParaGravar(nota.prestador_documento),
     numero: nota.numero ?? '',
-    chave_acesso: nota.chave_acesso ?? '',
+    chave_acesso: chaveParaGravar(nota.chave_acesso, nota.prestador_documento),
     emissao: nota.data_emissao ?? '',
     competencia: nota.competencia ?? '',
     descricao_servico: nota.descricao_servico ?? '',

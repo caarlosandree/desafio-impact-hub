@@ -39,4 +39,14 @@ function documentoParaGravar(valor) {
   return ehCpf(valor) ? mascararCpf(valor) : somenteAlfanumericos(valor);
 }
 
-module.exports = { calcularDvCnpj, validarCnpj, ehCpf, mascararCpf, documentoParaGravar }; // @node-only
+// A chave de acesso da NFS-e nacional carrega a inscrição de quem emitiu. Se o prestador
+// é pessoa física, gravar a chave crua colocaria o CPF inteiro na planilha, o que anularia
+// o mascaramento da coluna do documento.
+function chaveParaGravar(chave, documento) {
+  const texto = String(chave ?? '');
+  if (!texto || !ehCpf(documento)) return texto;
+  const digitos = somenteDigitos(documento);
+  return texto.split(digitos).join(`***${digitos.slice(3, 9)}**`);
+}
+
+module.exports = { calcularDvCnpj, validarCnpj, ehCpf, mascararCpf, documentoParaGravar, chaveParaGravar }; // @node-only

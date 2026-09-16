@@ -285,6 +285,7 @@ Motivos gerados antes da validação e onde aparecem:
 
 - `chave_duplicidade`: chave de acesso sem o prefixo `NFS`; sem chave, `{documento do prestador}|{número}`, só com letras e dígitos e número sem zeros à esquerda; registro de revisão sem dados de nota usa `origem:{origem_id}`.
 - Quando o prestador é pessoa física, o CPF não entra na chave: ela vira `CPF-{12 primeiros caracteres do SHA-256 do CPF}|{número}`, para a planilha não guardar o documento inteiro.
+- Pelo mesmo motivo, a **chave de acesso** da NFS-e é gravada com o CPF mascarado (`***456789**` no lugar dos 11 dígitos). A chave nacional carrega a inscrição de quem emitiu, então gravá-la crua anularia o mascaramento da coluna do documento. Nota de pessoa física sempre vai para revisão (`PRESTADOR_PESSOA_FISICA`) e o grupo não contrata PJ nessa forma, então a chave não precisa ficar consultável; o PDF original continua no Drive, em pasta restrita.
 - `id` da nota: 8 primeiros caracteres do SHA-256 da `chave_duplicidade` (reprocessar gera o mesmo `id`).
 - Consulta a aba Notas por **qualquer uma das duas chaves**: a `chave_duplicidade` da linha ou o par `{documento}|{número}` reconstruído a partir das colunas. Assim a mesma nota é reconhecida mesmo quando um envio tem a chave de acesso e o outro não (é o caso do T14, em que a segunda cópia é um PDF escaneado sem chave).
   - não existe: segue para o registro;

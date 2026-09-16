@@ -1,5 +1,5 @@
 const { somenteAlfanumericos, semZerosEsquerda } = require('./texto.cjs'); // @node-only
-const { ehCpf } = require('./cnpj.cjs'); // @node-only
+const { ehCpf, chaveParaGravar } = require('./cnpj.cjs'); // @node-only
 const { linhasValidas } = require('./linhas.cjs'); // @node-only
 
 function chaveDocumentoNumero(documento, numero, sha256) {
@@ -10,7 +10,7 @@ function chaveDocumentoNumero(documento, numero, sha256) {
 }
 
 function chaveDuplicidade(nota, origemId, indice, sha256) {
-  if (nota.chave_acesso) return somenteAlfanumericos(nota.chave_acesso).replace(/^NFS/, '');
+  if (nota.chave_acesso) return somenteAlfanumericos(chaveParaGravar(nota.chave_acesso, nota.prestador_documento)).replace(/^NFS/, '');
   return chaveDocumentoNumero(nota.prestador_documento, nota.numero, sha256) ?? `origem:${origemId}:${indice}`;
 }
 

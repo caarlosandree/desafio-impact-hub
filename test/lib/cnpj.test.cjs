@@ -30,3 +30,16 @@ test('CPF é detectado e mascarado sem expor os dígitos das pontas', () => {
   assert.equal(c.documentoParaGravar('123.456.789-09'), '***.456.789-**');
   assert.equal(c.documentoParaGravar('11.222.333/0001-81'), '11222333000181');
 });
+
+test('a chave de acesso não guarda o CPF do prestador pessoa física', () => {
+  // A chave da NFS-e nacional carrega a inscrição do emitente; quando ele é pessoa
+  // física, o CPF inteiro apareceria na planilha.
+  const chave = '35503081100012345678909000000000001926097777777195';
+  assert.equal(
+    c.chaveParaGravar(chave, '123.456.789-09'),
+    '355030811000***456789**000000000001926097777777195',
+  );
+  assert.equal(c.chaveParaGravar(chave, '11.222.333/0001-81'), chave);
+  assert.equal(c.chaveParaGravar('', '123.456.789-09'), '');
+  assert.equal(c.chaveParaGravar(null, '123.456.789-09'), '');
+});

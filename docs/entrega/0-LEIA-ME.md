@@ -48,5 +48,5 @@ Mesmo assim, escolhi o n8n para a entrega: é gratuito, o fluxo pode ser exporta
 ## Limitações conhecidas
 
 - Demonstração com Gmail pessoal de teste e app OAuth em modo de teste (a autorização expira em 7 dias). Em produção: conta técnica do Workspace e app interno.
-- A chave do Gemini da demonstração é do plano indicado em AI Studio → Billing Tier (preencher: gratuito ou pago). Com dados fictícios, o plano gratuito é aceitável; em produção, só o plano pago.
+- A chave do Gemini da demonstração é do **plano gratuito**: o projeto do Google Cloud onde ela foi criada não tem conta de faturamento vinculada. No plano gratuito o Google pode usar os comandos e as respostas para treinar seus modelos; por isso a demonstração usa só documentos fictícios. Em produção, só o plano pago, em que esse uso não acontece.
 - A planilha não tem trava de unicidade: a proteção vem do processamento em sequência, das checagens antes de gravar e das colunas técnicas protegidas.
