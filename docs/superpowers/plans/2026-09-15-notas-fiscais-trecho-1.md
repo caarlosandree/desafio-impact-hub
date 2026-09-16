@@ -5046,7 +5046,7 @@ for (const alvo of argumentos.filter((argumento) => argumento !== '--limpar')) {
 }
 ```
 
-- [ ] **Passo 4: Primeiro caso de ponta a ponta (T01)**
+- [x] **Passo 4: Primeiro caso de ponta a ponta (T01)**
 
 Run: `node scripts/bateria.mjs --limpar T01`
 Expected: `T01: ok` em até 3 minutos e uma linha em `testes/execucao.md`.
@@ -5655,7 +5655,7 @@ git commit -m "docs: LEIA-ME, desenho da solução, guia do financeiro e roteiro
 - Consumes: tudo o que foi produzido.
 - Produces: `entrega/` idêntica à pasta pública; link público enviado no formulário.
 
-- [ ] **Passo 1: Script de montagem com checagem de segredos**
+- [x] **Passo 1: Script de montagem com checagem de segredos**
 
 `scripts/montar-entrega.mjs`:
 ```js
@@ -5712,7 +5712,7 @@ console.log(faltando.length ? 'Entrega montada, mas incompleta.' : 'Entrega comp
 Run: `npm run entrega`
 Expected: árvore da pasta, `FALTANDO: 3-video.mp4` até o vídeo existir, e nenhuma linha `PROBLEMA`.
 
-- [ ] **Passo 2: Atualizar a spec com os ajustes**
+- [x] **Passo 2: Atualizar a spec com os ajustes**
 
 Em `docs/superpowers/specs/2026-09-11-notas-fiscais-design.md`: trocar o **Status** para "implementado (trecho 1)"; na seção 4.3.3, trocar "`responseMimeType: application/json` + JSON Schema" pelo formato que funcionou na Tarefa 5, Passo 5; acrescentar em 4.2 os parâmetros `n8n_url`, `remetente_alertas`, `sinal_de_vida_hora`, `formulario_empresas` e `simular_falha_registro`; em 4.3.5, registrar a duplicidade por qualquer das duas chaves e a chave com hash para CPF; em 7.2, anotar que T20 e T26 usam `simular_falha_registro` e o motivo.
 
