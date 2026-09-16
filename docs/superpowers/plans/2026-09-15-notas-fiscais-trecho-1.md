@@ -38,6 +38,7 @@
 8. **`n8n_url`, `remetente_alertas`, `sinal_de_vida_hora` e `formulario_empresas`** entram no node `Configuração`, porque o link da execução, o remetente SMTP, a hora do sinal de vida e a lista do formulário precisam deles.
 9. **`N8N_RUNNERS_ENABLED`.** O n8n 2.38.7 avisa no log que a variável não é mais necessária (os runners já vêm ligados). Ela fica no compose por constar da spec e não tem efeito.
 10. **`nomeSeguroArquivo` (Tarefa 7).** O regex do plano trazia os caracteres de controle como bytes literais (o que também fazia o `grep` tratar este arquivo como binário). Na implementação eles viraram os escapes `\x00-\x1f`, com o mesmo comportamento.
+11. **Conferência de CNPJ (Tarefa 12).** A BrasilAPI responde 403 a requisições sem `User-Agent`, e o script original tratava qualquer status diferente de 200 como "não encontrado" — um 403 passaria como CNPJ conferido. Agora o script manda `User-Agent`, aceita só o 404 como prova de inexistência e falha em qualquer outro status. Com isso apareceu que 4 dos CNPJs do plano existiam de verdade (Trampolim, Ateliê, Marina e Faxina); as bases foram trocadas por `947162030001`, `873904510001`, `926401870001` e `961830420001`, e a razão social do MEI acompanhou a nova raiz. **Pendente para o Carlos:** conferir na consulta pública da Receita que o CNPJ alfanumérico `7Q2K9M4P000188` também não existe — a BrasilAPI não cobre CNPJ alfanumérico.
 
 ## Fatos conferidos na imagem 2.38.7 (15/09/2026), que sustentam o plano
 
@@ -2869,7 +2870,7 @@ git commit -m "feat: textos de alerta, sinal de vida e resposta do formulário"
   - `definirErros(config): Workflow`
   - `npm run construir` → `n8n/workflows/*.json`; `npm run construir:entrega` → `entrega/2-fluxo-n8n/*.json`
 
-- [ ] **Passo 1: Escrever o teste que falha**
+- [x] **Passo 1: Escrever o teste que falha**
 
 `test/construtor.test.mjs`:
 ```js
@@ -2930,12 +2931,12 @@ test('NF · Erros: gatilho de erro → código → SMTP, sem segredo no JSON', (
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/construtor.test.mjs`
 Expected: FAIL com `Cannot find module '…/n8n/construtor.mjs'`.
 
-- [ ] **Passo 3: Implementar o construtor**
+- [x] **Passo 3: Implementar o construtor**
 
 `n8n/construtor.mjs`:
 ```js
@@ -3080,7 +3081,7 @@ export function emailSmtp(base = '$json') {
 }
 ```
 
-- [ ] **Passo 4: Implementar o código do alerta, a definição do `NF · Erros` e o script de construção**
+- [x] **Passo 4: Implementar o código do alerta, a definição do `NF · Erros` e o script de construção**
 
 `n8n/codigo/montar-alerta-erro.js`:
 ```js
@@ -3136,12 +3137,12 @@ for (const [nome, definir] of definicoes) {
 console.log(`${definicoes.length} workflow(s) em ${path.relative(RAIZ, destino)} usando ${path.relative(RAIZ, arquivoConfig)}`);
 ```
 
-- [ ] **Passo 5: Rodar os testes e construir**
+- [x] **Passo 5: Rodar os testes e construir**
 
 Run: `node --test test/ && npm run construir`
 Expected: PASS em tudo e `1 workflow(s) em n8n/workflows usando n8n/config.exemplo.json`.
 
-- [ ] **Passo 6: Commit**
+- [x] **Passo 6: Commit**
 
 ```bash
 git add n8n/construtor.mjs n8n/codigo/montar-alerta-erro.js n8n/definicoes/erros.mjs scripts/construir-workflows.mjs test/construtor.test.mjs
@@ -3167,7 +3168,7 @@ git commit -m "feat: construtor de workflows com bibliotecas embutidas e NF · E
 4. Todo node que chama serviço externo tem 3 tentativas e saída de erro ligada a `Falha técnica`, que etiqueta `NF/erro`, grava `ERRO_TECNICO`, alerta por SMTP e devolve o controle ao loop.
 5. **Regra de ouro dentro do loop:** um node Code só pode ler `$('X')` de um node que roda em **toda** iteração antes dele, ou de um node que ele sabe que rodou nesta iteração (ex.: `Criar pasta do mês` só é lido se `pastas_criar` não está vazio). Por isso existe o node `Plano de registro`, que junta os dois caminhos de planejamento.
 
-- [ ] **Passo 1: Escrever os testes estruturais que falham** (acrescentar ao fim de `test/construtor.test.mjs`)
+- [x] **Passo 1: Escrever os testes estruturais que falham** (acrescentar ao fim de `test/construtor.test.mjs`)
 
 `test/construtor.test.mjs` (acréscimo):
 ```js
@@ -3234,12 +3235,12 @@ test('Configuração embute os parâmetros da spec', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/construtor.test.mjs`
 Expected: FAIL com `Cannot find module '…/n8n/definicoes/principal.mjs'`.
 
-- [ ] **Passo 3: Escrever os códigos de entrada**
+- [x] **Passo 3: Escrever os códigos de entrada**
 
 `n8n/codigo/configuracao.js`:
 ```js
@@ -3306,7 +3307,7 @@ return $input.all().map((item) => {
 });
 ```
 
-- [ ] **Passo 4: Escrever os códigos do pipeline de leitura**
+- [x] **Passo 4: Escrever os códigos do pipeline de leitura**
 
 `n8n/codigo/triar-anexos.js`:
 ```js
@@ -3383,7 +3384,7 @@ const plano = planejarRegistro(anterior.pacote, consolidado, {
 return [{ json: plano }];
 ```
 
-- [ ] **Passo 5: Escrever os códigos do registro, da falha e das respostas**
+- [x] **Passo 5: Escrever os códigos do registro, da falha e das respostas**
 
 `n8n/codigo/plano-de-registro.js`:
 ```js
@@ -3533,7 +3534,7 @@ const sinal = textoSinalDeVida({
 return [{ json: { ...sinal, para: config.emails_alerta, de: config.remetente_alertas } }];
 ```
 
-- [ ] **Passo 6: Escrever a definição do workflow**
+- [x] **Passo 6: Escrever a definição do workflow**
 
 `n8n/definicoes/principal.mjs`:
 ```js
@@ -3808,7 +3809,7 @@ export function definirPrincipal(config) {
 }
 ```
 
-- [ ] **Passo 7: Rodar os testes e construir**
+- [x] **Passo 7: Rodar os testes e construir**
 
 Run: `node --test test/ && npm run construir`
 Expected: PASS em tudo e `2 workflow(s) em n8n/workflows usando n8n/config.exemplo.json`.
@@ -3817,7 +3818,7 @@ Expected: PASS em tudo e `2 workflow(s) em n8n/workflows usando n8n/config.exemp
 
 Em `principal.mjs`, trocar `authentication: 'n8nUserAuth', requireExecuteAccess: false,` por `authentication: 'basicAuth',` e acrescentar `credentials: { httpBasicAuth: { id: 'nfFormBasicAuth1', name: 'NF · Formulário' } }` no node `Formulário de notas` (via `opcoes.credenciais`). Acrescentar a credencial `httpBasicAuth` com `user`/`password` em `scripts/importar-credenciais.mjs` (Tarefa 13). Registrar a troca em `testes/execucao.md` e no guia do financeiro.
 
-- [ ] **Passo 9: Commit**
+- [x] **Passo 9: Commit**
 
 ```bash
 git add n8n/definicoes/principal.mjs n8n/codigo/ test/construtor.test.mjs
@@ -3838,7 +3839,7 @@ git commit -m "feat: workflow NF · Recepção e extração com tratamento de fa
   - Webhooks (só `localhost`): `GET /webhook/nf-teste-estado` → `{ notas, arquivos, ocorrencias, emails: [{id, assunto, etiquetas: string[]}] }`; `POST /webhook/nf-teste-limpar` → limpa as abas Notas, Arquivos e Ocorrências (mantém cabeçalho) e apaga do Gmail os e-mails com assunto `[T`; `POST /webhook/nf-teste-reprocessar?assunto=[T19]` → tira `NF/erro` dos e-mails com esse assunto.
   - `scripts/apoio.mjs`: `estado(): Promise<Estado>`, `limpar(): Promise<void>`, `reprocessar(assunto): Promise<void>`
 
-- [ ] **Passo 1: Escrever o teste que falha** (acrescentar ao fim de `test/construtor.test.mjs`)
+- [x] **Passo 1: Escrever o teste que falha** (acrescentar ao fim de `test/construtor.test.mjs`)
 
 `test/construtor.test.mjs` (acréscimo):
 ```js
@@ -3853,12 +3854,12 @@ test('NF · Apoio aos testes expõe os três webhooks locais', () => {
 });
 ```
 
-- [ ] **Passo 2: Rodar e ver falhar**
+- [x] **Passo 2: Rodar e ver falhar**
 
 Run: `node --test test/construtor.test.mjs`
 Expected: FAIL com `Cannot find module '…/n8n/definicoes/apoio.mjs'`.
 
-- [ ] **Passo 3: Implementar**
+- [x] **Passo 3: Implementar**
 
 `n8n/codigo/montar-estado.js`:
 ```js
@@ -3966,12 +3967,12 @@ export const limpar = () => chamar('POST', 'nf-teste-limpar');
 export const reprocessar = (assunto) => chamar('POST', `nf-teste-reprocessar?assunto=${encodeURIComponent(assunto)}`);
 ```
 
-- [ ] **Passo 2b: Rodar os testes e construir**
+- [x] **Passo 2b: Rodar os testes e construir**
 
 Run: `node --test test/ && npm run construir`
 Expected: PASS em tudo e `3 workflow(s) em n8n/workflows usando n8n/config.exemplo.json`.
 
-- [ ] **Passo 4: Commit**
+- [x] **Passo 4: Commit**
 
 ```bash
 git add n8n/definicoes/apoio.mjs n8n/codigo/montar-estado.js n8n/codigo/resumo-simples.js scripts/apoio.mjs test/construtor.test.mjs
@@ -3991,7 +3992,7 @@ git commit -m "test: workflow local de apoio para conferir planilha e etiquetas"
   - `notas.mjs`: `montarNota(id)` → `{ id, numero, chave, emissao, competencia, prestador: {documento, nome}, tomador: {cnpj, nome}, descricao, valorServico, retencoes, valorLiquido, substituida }`; `BOLETOS.{id} = {nota, valor, vencimento}`
   - `modelos.mjs`: `xmlNfse(nota)`, `xmlEvento(nota)`, `chaveNfe(...)`, `htmlDanfse(nota, {injecao})`, `htmlBoleto(boleto, nota)`, `htmlDanfe(nfe)`
 
-- [ ] **Passo 1: Dados fictícios**
+- [x] **Passo 1: Dados fictícios**
 
 `testdata/dados.mjs`:
 ```js
@@ -4110,7 +4111,7 @@ export const BOLETOS = {
 };
 ```
 
-- [ ] **Passo 2: Modelos de XML e HTML**
+- [x] **Passo 2: Modelos de XML e HTML**
 
 `testdata/modelos.mjs`:
 ```js
@@ -4236,7 +4237,7 @@ export function htmlDanfe(nfe) {
 }
 ```
 
-- [ ] **Passo 3: Gerador com autoconferência**
+- [x] **Passo 3: Gerador com autoconferência**
 
 `testdata/gerar.mjs`:
 ```js
@@ -4372,17 +4373,17 @@ for (const item of lista) {
 process.exit(problemas ? 1 : 0);
 ```
 
-- [ ] **Passo 4: Gerar e conferir**
+- [x] **Passo 4: Gerar e conferir**
 
 Run: `npm run gerar:dados && node testdata/conferir-cnpjs.mjs`
 Expected: `Arquivos de teste gerados e conferidos em …/testdata/saida/arquivos` e todos os CNPJs numéricos com `não encontrado (HTTP 404)`. Se algum `EXISTE`, trocar a base de 12 dígitos em `testdata/dados.mjs` e repetir. Registrar a consulta do CNPJ alfanumérico em `testes/execucao.md` como conferência manual.
 
-- [ ] **Passo 5: Conferir visualmente 3 arquivos**
+- [x] **Passo 5: Conferir visualmente 3 arquivos**
 
 Abrir `danfse-1201-n1201.pdf`, `danfse-455-escaneada.pdf` e `boleto-1201-b1201.pdf` e confirmar que a marca `DOCUMENTO FICTÍCIO — SEM VALOR FISCAL` aparece, que o boleto mostra vencimento e valor, e que a versão escaneada é imagem.
 Lista esperada em `testdata/saida/arquivos/`: 15 `nfse-*.xml`, `evento-cancelamento-87.xml`, 10 `danfse-*-n*.pdf`, `danfse-455-escaneada.pdf`, `danfse-87-escaneada.pdf`, `danfse-5501-senha.pdf`, `danfse-1310-restrita.pdf`, 4 `boleto-*.pdf`, `danfe-45871-papelaria.pdf`, `nota-3310-foto.jpg`, `logo-assinatura.png`, `notas-setembro.zip`.
 
-- [ ] **Passo 6: Commit**
+- [x] **Passo 6: Commit**
 
 ```bash
 git add testdata/dados.mjs testdata/notas.mjs testdata/modelos.mjs testdata/gerar.mjs testdata/conferir-cnpjs.mjs
