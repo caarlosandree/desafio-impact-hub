@@ -115,3 +115,13 @@ test('Configuração embute os parâmetros da spec', () => {
     assert.ok(configuracao.includes(`"${chave}"`), chave);
   }
 });
+
+import { definirApoio } from '../n8n/definicoes/apoio.mjs';
+
+test('NF · Apoio aos testes expõe os três webhooks locais', () => {
+  const json = definirApoio(config).json();
+  assert.equal(json.id, 'NFapoioTestes001');
+  const caminhos = json.nodes.filter((n) => n.type === 'n8n-nodes-base.webhook').map((n) => `${n.parameters.httpMethod} ${n.parameters.path}`).sort();
+  assert.deepEqual(caminhos, ['GET nf-teste-estado', 'POST nf-teste-limpar', 'POST nf-teste-reprocessar']);
+  assert.equal(json.nodes.filter((n) => n.type === 'n8n-nodes-base.respondToWebhook').length, 3);
+});
