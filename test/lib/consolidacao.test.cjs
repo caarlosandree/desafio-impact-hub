@@ -66,7 +66,7 @@ test('PDF lido pela IA vira nota; vencimento do corpo; NF-e com chave de 44 digi
   const leituraIa = {
     documentos: [
       documentoIa({ arquivo: 1, numero: '77', chave_acesso: CHAVE_B, valor_liquido: 900 }),
-      documentoIa({ arquivo: 2, numero: '5', chave_acesso: '3'.repeat(44) }),
+      documentoIa({ arquivo: 2, numero: '5', chave_acesso: '3526098156209300014855001000045871134587111' + '9' }),
     ],
     vencimento_corpo_email: { data: '2026-09-20', trecho: 'Vence 20/09' },
   };
@@ -76,6 +76,23 @@ test('PDF lido pela IA vira nota; vencimento do corpo; NF-e com chave de 44 digi
   assert.equal(notas[0].vencimento_fonte, 'Corpo do e-mail');
   assert.equal('valor_documento' in notas[0], false);
   assert.deepEqual(linha_propria, { motivos: ['NFE_PRODUTO'], arquivos_ligados: [{ chave: 'danfe', tipo: 'anexo' }] });
+});
+
+test('chave de NFS-e truncada pela leitura de um escaneado não vira NF-e de produto', () => {
+  // A chave nacional da NFS-e tem 50 dígitos; um escaneado mal lido pode devolver 44 e
+  // cair na regra de NF-e. O modelo (posições 21 e 22) só é 55 ou 65 numa NF-e de verdade.
+  const pacote = prepararPacote(
+    { corpo_texto: '', anexos: [{ chave: 'p1', tipo: 'pdf' }] },
+    {},
+    [{ chave: 'p1', texto: '', erro: null }],
+  );
+  const leituraIa = {
+    documentos: [documentoIa({ arquivo: 1, numero: '87', chave_acesso: '35503081292640187000106000000000008726097777'.slice(0, 44), valor_liquido: 1200 })],
+  };
+  const { notas, linha_propria } = consolidar(pacote, leituraIa, MODELO);
+  assert.equal(linha_propria, null);
+  assert.equal(notas.length, 1);
+  assert.equal(notas[0].numero, '87');
 });
 
 test('So boleto -> linha propria NOTA_NAO_ENCONTRADA com todos os arquivos', () => {

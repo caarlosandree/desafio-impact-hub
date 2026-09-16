@@ -1,4 +1,13 @@
 const TOLERANCIA_CENTAVOS = 0.005;
+const MODELOS_NFE = new Set(['55', '65']);
+
+// A chave da NF-e tem 44 dígitos e a da NFS-e nacional, 50. Só o tamanho não basta:
+// a leitura de um documento escaneado pode devolver uma chave de NFS-e truncada.
+// Numa NF-e de verdade as posições 21 e 22 são o modelo (55 ou 65).
+function ehChaveNfe(chave) {
+  const texto = String(chave ?? '');
+  return /^\d{44}$/.test(texto) && MODELOS_NFE.has(texto.slice(20, 22));
+}
 
 function valorDeReferencia(nota) {
   return nota.valor_liquido ?? nota.valor_servico ?? null;
@@ -13,7 +22,7 @@ function consolidar(pacote, leituraIa, modelo) {
   const boletos = [];
 
   for (const documento of documentos) {
-    const tipo = documento.tipo === 'nfse' && /^\d{44}$/.test(documento.chave_acesso ?? '') ? 'nfe' : documento.tipo;
+    const tipo = documento.tipo === 'nfse' && ehChaveNfe(documento.chave_acesso) ? 'nfe' : documento.tipo;
     const arquivoChave = chaveDoArquivo(documento);
     if (tipo === 'nfse') {
       const repetida = documento.chave_acesso ? notas.find((nota) => nota.chave_acesso === documento.chave_acesso) : null;
@@ -99,4 +108,4 @@ function consolidar(pacote, leituraIa, modelo) {
   return { notas, linha_propria: linhaPropria };
 }
 
-module.exports = { consolidar }; // @node-only
+module.exports = { consolidar, ehChaveNfe }; // @node-only
