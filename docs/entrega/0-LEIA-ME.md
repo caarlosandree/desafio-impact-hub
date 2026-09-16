@@ -2,6 +2,8 @@
 
 *Carlos · Vaga Pessoa Analista de IA e Produtos Digitais · Entrega de 16/09/2026*
 
+**Código-fonte e histórico:** https://github.com/caarlosandree/desafio-impact-hub
+
 ## O que tem nesta pasta
 
 
