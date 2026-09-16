@@ -1,8 +1,5 @@
 import './env.mjs';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
 import { exigir } from './env.mjs';
 
 const modoGemini = process.argv.find((argumento) => argumento.startsWith('--gemini='))?.split('=')[1];
@@ -21,14 +18,10 @@ const credenciais = modoGemini ? [gemini] : [
   { id: 'nfSmtpAlertas001', name: 'NF · SMTP alertas', type: 'smtp', data: { user: process.env.GMAIL_TESTE, password: process.env.SMTP_SENHA_APP, host: 'smtp.gmail.com', port: 465, secure: true } },
 ];
 
-const pasta = mkdtempSync(path.join(os.tmpdir(), 'nf-cred-'));
-const arquivo = path.join(pasta, 'credenciais.json');
-writeFileSync(arquivo, JSON.stringify(credenciais), { mode: 0o600 });
+execFileSync('docker', ['exec', '-i', 'nf-n8n', 'sh', '-c', 'umask 077; cat > /tmp/credenciais-nf.json'], { input: JSON.stringify(credenciais) });
 try {
-  execFileSync('docker', ['cp', arquivo, 'nf-n8n:/tmp/credenciais-nf.json']);
   execFileSync('docker', ['exec', 'nf-n8n', 'n8n', 'import:credentials', '--input=/tmp/credenciais-nf.json'], { stdio: 'inherit' });
 } finally {
   execFileSync('docker', ['exec', 'nf-n8n', 'rm', '-f', '/tmp/credenciais-nf.json']);
-  rmSync(pasta, { recursive: true, force: true });
 }
 console.log(modoGemini ? `Credencial do Gemini importada (${modoGemini}).` : 'Credenciais importadas. Conecte as três credenciais do Google no n8n.');
