@@ -1,15 +1,20 @@
 import { BOLETOS, montarNota } from './notas.mjs';
 import { diasAPartirDeHoje, paraBr } from './dados.mjs';
 
+// O Gmail guarda duas cópias de um e-mail que a conta manda para si mesma (uma em
+// Enviados e outra na Caixa de entrada), e as duas entram no fluxo. Por isso o
+// contexto junta todas as cópias do mesmo caso.
 export function contextoDoEmail(estado, id) {
-  const email = estado.emails.find((item) => item.assunto.startsWith(`[${id}]`)) ?? null;
-  const daOrigem = (linha) => email && String(linha.origem_id) === email.id;
+  const copias = estado.emails.filter((item) => item.assunto.startsWith(`[${id}]`));
+  const origens = new Set(copias.map((copia) => String(copia.id)));
+  const daOrigem = (linha) => origens.has(String(linha.origem_id));
   return {
-    email,
-    notas: email ? estado.notas.filter(daOrigem) : [],
-    arquivos: email ? estado.arquivos.filter(daOrigem) : [],
-    ocorrencias: email ? estado.ocorrencias.filter(daOrigem) : [],
-    etiquetas: email ? email.etiquetas.filter((etiqueta) => etiqueta.startsWith('NF/')) : [],
+    email: copias[0] ?? null,
+    copias,
+    notas: estado.notas.filter(daOrigem),
+    arquivos: estado.arquivos.filter(daOrigem),
+    ocorrencias: estado.ocorrencias.filter(daOrigem),
+    etiquetas: [...new Set(copias.flatMap((copia) => copia.etiquetas))].filter((etiqueta) => etiqueta.startsWith('NF/')),
   };
 }
 

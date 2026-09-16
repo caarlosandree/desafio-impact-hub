@@ -39,7 +39,7 @@ async function aguardarEtiqueta(id, etiqueta = null, limiteMin = 15) {
     const atual = await estado();
     const ctx = contextoDoEmail(atual, id);
     if (ctx.etiquetas.length && (!etiqueta || ctx.etiquetas.includes(etiqueta))) return { atual, ctx };
-    await esperar(20000);
+    await esperar(30000); // a cota de leitura do Google Planilhas é de 60 chamadas por minuto
   }
   throw new Error(`${id}: sem etiqueta ${etiqueta ?? 'NF/*'} depois de ${limiteMin} minutos`);
 }

@@ -18,7 +18,7 @@ export function definirApoio(config) {
   ler('Notas (estado)', 'Notas', [2, 0]);
   ler('Arquivos (estado)', 'Arquivos', [3, 0]);
   ler('Ocorrências (estado)', 'Ocorrências', [4, 0]);
-  gmail('E-mails de teste', { resource: 'message', operation: 'getAll', returnAll: true, simple: false, filters: { q: 'subject:"[T" newer_than:7d', readStatus: 'both' }, options: {} }, [5, 0], LEITURA);
+  gmail('E-mails de teste', { resource: 'message', operation: 'getAll', returnAll: true, simple: false, filters: { q: 'newer_than:2d', readStatus: 'both' }, options: {} }, [5, 0], LEITURA);
   no('Montar estado', 'n8n-nodes-base.code', 2, codigo('montar-estado.js'), [6, 0]);
   responder('Responder estado', [7, 0]);
   ['Pedido de estado', 'Etiquetas (estado)', 'Notas (estado)', 'Arquivos (estado)', 'Ocorrências (estado)', 'E-mails de teste', 'Montar estado', 'Responder estado']
@@ -28,12 +28,13 @@ export function definirApoio(config) {
   limpar('Limpar Notas', 'Notas', [1, 2]);
   limpar('Limpar Arquivos', 'Arquivos', [2, 2]);
   limpar('Limpar Ocorrências', 'Ocorrências', [3, 2]);
-  gmail('E-mails a apagar', { resource: 'message', operation: 'getAll', returnAll: true, simple: true, filters: { q: 'subject:"[T"', readStatus: 'both' } }, [4, 2], LEITURA);
-  no('Tem e-mail a apagar?', 'n8n-nodes-base.if', 2.2, se('Boolean($json.id)'), [5, 2]);
-  gmail('Apagar e-mail', { resource: 'message', operation: 'delete', messageId: expr('$json.id') }, [6, 2]);
-  no('Resumo da limpeza', 'n8n-nodes-base.code', 2, codigo('resumo-simples.js'), [7, 2]);
-  responder('Responder limpeza', [8, 2]);
-  ['Pedido de limpeza', 'Limpar Notas', 'Limpar Arquivos', 'Limpar Ocorrências', 'E-mails a apagar', 'Tem e-mail a apagar?']
+  gmail('E-mails a apagar', { resource: 'message', operation: 'getAll', returnAll: true, simple: false, filters: { q: 'newer_than:2d', readStatus: 'both' }, options: {} }, [4, 2], LEITURA);
+  no('Só os e-mails de teste', 'n8n-nodes-base.code', 2, codigo('so-emails-de-teste.js'), [5, 2]);
+  no('Tem e-mail a apagar?', 'n8n-nodes-base.if', 2.2, se('Boolean($json.id)'), [6, 2]);
+  gmail('Apagar e-mail', { resource: 'message', operation: 'delete', messageId: expr('$json.id') }, [7, 2]);
+  no('Resumo da limpeza', 'n8n-nodes-base.code', 2, codigo('resumo-simples.js'), [8, 2]);
+  responder('Responder limpeza', [9, 2]);
+  ['Pedido de limpeza', 'Limpar Notas', 'Limpar Arquivos', 'Limpar Ocorrências', 'E-mails a apagar', 'Só os e-mails de teste', 'Tem e-mail a apagar?']
     .reduce((anterior, atual) => { ligar(anterior, atual); return atual; });
   ligar('Tem e-mail a apagar?', 'Apagar e-mail', 0);
   ligar('Tem e-mail a apagar?', 'Resumo da limpeza', 1);
