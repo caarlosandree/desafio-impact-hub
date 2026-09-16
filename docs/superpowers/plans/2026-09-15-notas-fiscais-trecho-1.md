@@ -28,7 +28,7 @@
 
 ## Ajustes em relação à spec (decididos neste plano, com motivo)
 
-1. **Formato da saída estruturada do Gemini.** A página oficial consultada em 15/09/2026 usa `generationConfig.responseFormat.text.{mimeType, schema}` no endpoint `generateContent` (e não `responseMimeType`). A Tarefa 5 confere com uma chamada real; se a API recusar, usa-se `responseMimeType` + `responseJsonSchema`. Atualizar a spec 4.3.3 com o formato que funcionar.
+1. **Formato da saída estruturada do Gemini.** **Conferido com chamada real em 15/09/2026 (Tarefa 5, Passo 5).** O endpoint `generateContent` aceita `generationConfig.responseFormat.text.{mimeType, schema}`, mas `mimeType` é um *enum*, não uma string livre: `"application/json"` é recusado com HTTP 400 e o valor certo é `APPLICATION_JSON`. A alternativa `responseMimeType` + `responseJsonSchema` também funciona, mas devolveu texto com o acento perdido (`at\u0065` no lugar de `até`), então ficou como plano B. `gemini-3.5-flash-lite` existe na lista de modelos. Um teste com o DANFSe escaneado e o boleto reais leu nota e boleto corretamente. Atualizar a spec 4.3.3 com esse formato.
 2. **Duplicidade usa as duas chaves.** A spec 3.1 cita "chave de acesso **ou** documento do prestador + número". A consulta à aba Notas casa por qualquer uma das duas (evita perder duplicata quando a IA lê a chave numa versão e não na outra).
 3. **Chave de duplicidade de nota emitida por CPF** usa `CPF-{12 primeiros hex do SHA-256 do CPF}|{número}`, para cumprir "CPF nunca é gravado inteiro".
 4. **Falha simulada para T20 e T26.** A aba Arquivos é lida antes do registro; renomeá-la faria o fluxo falhar na leitura, e não "no meio do registro". Por isso o node `Configuração` ganha `simular_falha_registro` (sempre `false` em produção), que faz o passo de gravação dos hashes falhar depois de Drive e aba Notas. Registrar isso na seção de testes da documentação.
@@ -1831,7 +1831,7 @@ module.exports = { consolidar }; // @node-only
 Run: `node --test test/lib/`
 Expected: PASS.
 
-- [ ] **Passo 5: Conferir o formato da API do Gemini com uma chamada real** (precisa de `GEMINI_API_KEY` em `infra/.env`)
+- [x] **Passo 5: Conferir o formato da API do Gemini com uma chamada real** (precisa de `GEMINI_API_KEY` em `infra/.env`)
 
 Run:
 ```bash
@@ -4404,7 +4404,7 @@ git commit -m "test: gerador de notas, boletos e documentos fictícios para a ba
   - `node scripts/importar-credenciais.mjs [--gemini=valida|invalida]`
   - `bash scripts/implantar.sh` (constrói, importa, publica e reinicia)
 
-- [ ] **Passo 1: Carregador do `.env`**
+- [x] **Passo 1: Carregador do `.env`**
 
 `scripts/env.mjs`:
 ```js
@@ -4428,7 +4428,7 @@ export function exigir(...nomes) {
 }
 ```
 
-- [ ] **Passo 2: Planilha modelo**
+- [x] **Passo 2: Planilha modelo**
 
 `scripts/gerar-planilha-modelo.mjs`:
 ```js
@@ -4474,7 +4474,7 @@ console.log(`Planilha modelo gerada em ${path.relative(RAIZ_PROJETO, destino)}`)
 Run: `npm run gerar:planilha`
 Expected: `Planilha modelo gerada em testdata/saida/planilha-modelo.xlsx`. **Carlos executa agora a Tarefa 0, Passo 5.**
 
-- [ ] **Passo 3: Configuração local**
+- [x] **Passo 3: Configuração local**
 
 `scripts/configurar-local.mjs`:
 ```js
@@ -4557,7 +4557,7 @@ Expected: `Successfully imported 5 credentials.` e a mensagem final.
 
 Em `http://localhost:5678` → Credentials, abrir `NF · Gmail`, `NF · Google Planilhas` e `NF · Google Drive`, clicar em **Sign in with Google** em cada uma e autorizar com `desafioimphub@gmail.com`. Esperado: "Account connected" nas três. Abrir `NF · SMTP alertas` e clicar em **Test**: esperado "Connection tested successfully".
 
-- [ ] **Passo 6: Script de implantação**
+- [x] **Passo 6: Script de implantação**
 
 `scripts/implantar.sh`:
 ```bash

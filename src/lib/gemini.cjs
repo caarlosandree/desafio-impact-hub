@@ -64,7 +64,7 @@ function montarPedidoGemini(pacote, base64DoAnexo) {
   return {
     systemInstruction: { parts: [{ text: GEMINI_INSTRUCAO }] },
     contents: [{ role: 'user', parts: partes }],
-    generationConfig: { temperature: 0, responseFormat: { text: { mimeType: 'application/json', schema: GEMINI_ESQUEMA } } },
+    generationConfig: { temperature: 0, responseFormat: { text: { mimeType: 'APPLICATION_JSON', schema: GEMINI_ESQUEMA } } },
   };
 }
 

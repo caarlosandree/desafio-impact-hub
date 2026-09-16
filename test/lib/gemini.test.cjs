@@ -17,7 +17,7 @@ test('montarPedidoGemini envia corpo e arquivos inline com saída estruturada', 
     { text: 'Arquivo 1:' }, { inlineData: { mimeType: 'application/pdf', data: 'base64-p1' } },
     { text: 'Arquivo 2:' }, { inlineData: { mimeType: 'image/png', data: 'base64-f1' } },
   ]);
-  assert.deepEqual(pedido.generationConfig.responseFormat, { text: { mimeType: 'application/json', schema: GEMINI_ESQUEMA } });
+  assert.deepEqual(pedido.generationConfig.responseFormat, { text: { mimeType: 'APPLICATION_JSON', schema: GEMINI_ESQUEMA } });
   assert.equal(pedido.generationConfig.temperature, 0);
   assert.equal(JSON.stringify(pedido).includes('nota.pdf'), false);
 });
