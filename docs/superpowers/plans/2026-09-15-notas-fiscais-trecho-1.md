@@ -4510,7 +4510,7 @@ console.log(`n8n/config.local.json ${novo ? 'criado' : 'atualizado'}: ${process.
 Run: `node scripts/configurar-local.mjs planilha_id=<ID_DA_PLANILHA> pasta_raiz_id=<ID_DA_PASTA_NF>`
 Expected: `n8n/config.local.json criado: planilha_id=… pasta_raiz_id=…`. Conferir que `emails_alerta` não é o e-mail de teste.
 
-- [ ] **Passo 4: Importação das credenciais**
+- [x] **Passo 4: Importação das credenciais**
 
 `scripts/importar-credenciais.mjs`:
 ```js
@@ -4554,7 +4554,7 @@ Run: `node scripts/importar-credenciais.mjs`
 Expected: `Successfully imported 5 credentials.` e a mensagem final.
 **Atenção:** rodar sem `--gemini=` de novo apaga os tokens OAuth já conectados; depois da primeira vez, usar só `--gemini=valida|invalida`.
 
-- [ ] **Passo 5: Conectar as credenciais do Google (Carlos, no navegador)**
+- [x] **Passo 5: Conectar as credenciais do Google (Carlos, no navegador)**
 
 Em `http://localhost:5678` → Credentials, abrir `NF · Gmail`, `NF · Google Planilhas` e `NF · Google Drive`, clicar em **Sign in with Google** em cada uma e autorizar com `desafioimphub@gmail.com`. Esperado: "Account connected" nas três. Abrir `NF · SMTP alertas` e clicar em **Test**: esperado "Connection tested successfully".
 
@@ -4614,7 +4614,7 @@ git commit -m "chore: scripts de implantação local, planilha modelo e credenci
   - `enviarCaso(caso)`, `enviarFormulario({ empresa, arquivos, vencimento, observacao }): Promise<string>` (texto da página final)
   - `node scripts/bateria.mjs [--limpar] A|B|T19|T20|T21|T22|T26|<ids…>` → grava linhas em `testes/execucao.md`
 
-- [ ] **Passo 1: Definir os casos**
+- [x] **Passo 1: Definir os casos**
 
 `testdata/casos.mjs`:
 ```js
@@ -4807,7 +4807,7 @@ export const CASOS = [
 ];
 ```
 
-- [ ] **Passo 2: Envio por SMTP e envio do formulário**
+- [x] **Passo 2: Envio por SMTP e envio do formulário**
 
 `scripts/enviar-caso.mjs`:
 ```js
@@ -4879,7 +4879,7 @@ export async function enviarFormulario({ empresa, arquivos, vencimento, observac
 }
 ```
 
-- [ ] **Passo 3: Orquestrador da bateria**
+- [x] **Passo 3: Orquestrador da bateria**
 
 `scripts/bateria.mjs`:
 ```js
