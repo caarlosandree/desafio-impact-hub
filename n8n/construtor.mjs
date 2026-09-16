@@ -49,6 +49,9 @@ export function montarCodigo(arquivo, substituicoes = {}) {
   return codigoFinal;
 }
 
+// Nodes de webhook e de formulário só são registrados pelo n8n quando trazem um webhookId próprio.
+const TIPOS_COM_WEBHOOK = new Set(['n8n-nodes-base.webhook', 'n8n-nodes-base.formTrigger']);
+
 export class Workflow {
   constructor({ id, nome, configuracoes }) {
     this.id = id;
@@ -68,6 +71,7 @@ export class Workflow {
       position: [posicao[0] * 260, posicao[1] * 200],
       parameters: parametros,
       ...(credenciais ? { credentials: credenciais } : {}),
+      ...(TIPOS_COM_WEBHOOK.has(tipo) ? { webhookId: uuidDeterministico(`${this.id}:${nome}:webhook`) } : {}),
       ...extras,
     });
     return nome;

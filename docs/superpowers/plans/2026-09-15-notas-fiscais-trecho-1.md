@@ -4587,7 +4587,7 @@ echo "Workflows importados, publicados e n8n reiniciado."
 Run: `chmod +x scripts/implantar.sh && bash scripts/implantar.sh`
 Expected: `Activated workflow "NF · Recepção e extração"`, `Activated workflow "NF · Apoio aos testes"`, nenhuma linha `problem in` e a mensagem final.
 
-- [ ] **Passo 7: Conferir planilha e Gmail pelo webhook de apoio**
+- [x] **Passo 7: Conferir planilha e Gmail pelo webhook de apoio**
 
 Run: `curl -s http://localhost:5678/webhook/nf-teste-estado`
 Expected: `{"notas":[],"arquivos":[],"ocorrencias":[],"emails":[]}`. Se vier erro de etiqueta, criar as etiquetas (Tarefa 0, Passo 2). Se vier erro de planilha, conferir `planilha_id` e os nomes das abas.
