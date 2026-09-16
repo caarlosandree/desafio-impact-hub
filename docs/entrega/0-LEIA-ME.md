@@ -9,7 +9,7 @@
 | ---------------- | ----------------------------- | --------------------------------------------------------------------------------------------------- |
 | 1                | `0-LEIA-ME.pdf`               | Este índice, premissas, uso de IA e experiência prévia                                              |
 | 2                | `1-desenho-da-solucao.pdf`    | Desenho de ponta a ponta em 2 páginas: fluxo, ferramentas, responsáveis, riscos e falhas            |
-| 3                | `3-video.mp4`                 | 3 minutos com o fluxo rodando: caso normal, PDF escaneado, tomador errado, duplicata e erro técnico |
+| 3                | `3-video.mp4`                 | 2min40s com o fluxo rodando: caso normal, PDF escaneado, tomador errado, duplicata e erro técnico   |
 | 4                | `4-documentacao-trecho-1.pdf` | Guia do financeiro: rotina, formulário e plano de contingência                                      |
 | 5                | `2-fluxo-n8n/`                | Os 2 workflows exportados, `docker-compose.yml`, planilha modelo e instruções de importação         |
 | 6                | `5-notas-de-teste/`           | Arquivos fictícios da bateria, tabela de execução e teste de injeção de instruções                  |
@@ -25,11 +25,11 @@ O trecho 1 completo, da chegada do e-mail ao registro da nota: três entradas (G
 
 ## Premissas (resumo)
 
-- **Empresas fictícias:** Colmeia Espaços Colaborativos (coworking, ~110 notas/mês), Trampolim Inclusão Produtiva (~60) e Maré Eventos de Impacto (~30). A holding e a quarta iniciativa não recebem notas diretamente, o que explica 3 caixas para 4 empresas.
-- **Volume:** ~200 notas/mês, 70% entre os dias 1 e 10; ~120 fornecedores, muitos MEI (por isso há nomes de pessoas nas notas).
+- **Empresas fictícias:** Colmeia Espaços Colaborativos (coworking, \~110 notas/mês), Trampolim Inclusão Produtiva (\~60) e Maré Eventos de Impacto (\~30). A holding e a quarta iniciativa não recebem notas diretamente, o que explica 3 caixas para 4 empresas.
+- **Volume:** \~200 notas/mês, 70% entre os dias 1 e 10; \~120 fornecedores, muitos MEI (por isso há nomes de pessoas nas notas).
 - **Formato:** NFS-e no Padrão Nacional (obrigatório desde 01/01/2026), mas ainda chegam XML municipal, só PDF, PDF escaneado, foto e link de portal. NF-e de produto é exceção e vai para revisão.
 - **O que a nota não traz:** vencimento (vem do boleto, do e-mail ou, no trecho 2, do prazo padrão do fornecedor) e centro de custo (vem do cadastro de fornecedores). O fluxo nunca inventa data.
-- **Pessoas:** financeiro com 2 pessoas; ~10 centros de custo com gestor e substituto; o analista de IA é o dono técnico, com substituto treinado; a encarregada de dados valida antes de produção.
+- **Pessoas:** financeiro com 2 pessoas; \~10 centros de custo com gestor e substituto; o analista de IA é o dono técnico, com substituto treinado; a encarregada de dados valida antes de produção.
 - **Ferramentas do grupo:** Google Workspace. n8n self-hosted como orquestrador.
 - **Fora do escopo:** o pagamento em si, integração com ERP e tratamento de NF-e de produto.
 
@@ -41,6 +41,7 @@ O trecho 1 completo, da chegada do e-mail ao registro da nota: três entradas (G
 - **Brainstorming e especificação.** A IA propôs alternativas; as decisões (n8n, planilha como painel, WhatsApp oficial, descarte da Evolution API) foram minhas, registradas com o motivo.
 - **Código.** Gerado por MIM, revisado e coberto por testes automatizados por IA: as regras de negócio ficam em bibliotecas testadas fora do n8n (mais de 100 testes) e são embutidas nos nodes na hora de gerar o workflow. Os parâmetros dos nodes foram conferidos no código-fonte da própria versão 2.38.7.
 - **Dados de teste.** Notas, boletos, DANFE, versões escaneadas, foto e PDFs protegidos gerados por script, todos com a marca "DOCUMENTO FICTÍCIO — SEM VALOR FISCAL" e CNPJs conferidos como inexistentes.
+- **Vídeo.** As cenas são gravações de tela reais da bateria de testes. A narração foi gerada por voz sintética (Gemini TTS) a partir de um roteiro escrito para o vídeo.
 - **IA dentro do produto, sempre cercada.** O Gemini só lê o que o XML não resolve, responde num formato fechado, não tem acesso a ferramentas e trata o conteúdo como dado. Regras determinísticas (CNPJ, tomador, valores, datas, duplicidade) conferem tudo o que ele devolve, e a aprovação do gestor no trecho 2 é a última barreira. O teste de injeção de instruções está em `5-notas-de-teste/teste-de-injecao.md`.
 
 
