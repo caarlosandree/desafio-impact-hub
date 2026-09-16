@@ -5075,7 +5075,7 @@ git commit -m "test: bateria automatizada T01–T26 com conferência pela planil
 - Consumes: Tarefas 13 e 14.
 - Produces: tabela de execução com todos os casos `ok`; resultado do teste de injeção.
 
-- [ ] **Passo 1: Grupo A (casos independentes)**
+- [x] **Passo 1: Grupo A (casos independentes)**
 
 Run: `node scripts/bateria.mjs --limpar A`
 Expected: 18 linhas (T01–T10, T12, T15–T17, T23–T25, TI) com `ok`. Tempo esperado: 15 a 25 minutos.
@@ -5103,7 +5103,7 @@ Expected: `T22: ok`. Carlos confirma o recebimento de `[NF] Sinal de vida` com a
 3. Restaurar o `planilha_id`, rodar `bash scripts/implantar.sh` e esperar a varredura etiquetar o e-mail (até 10 minutos).
 4. Registrar manualmente em `testes/execucao.md` a linha `| … | Error Workflow | alerta recebido; e-mail processado pela varredura após correção | ok |`.
 
-- [ ] **Passo 6: Registrar o teste de injeção**
+- [x] **Passo 6: Registrar o teste de injeção**
 
 `testes/injecao.md`:
 ```markdown
