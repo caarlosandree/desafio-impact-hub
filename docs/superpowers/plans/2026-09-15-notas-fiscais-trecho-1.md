@@ -5138,7 +5138,7 @@ git commit -m "test: bateria T01–T26 executada com tabela de resultados"
 
 **Regras de redação (valem para todos os documentos):** português brasileiro com acentuação; frases curtas; nada de jargão no guia do financeiro (dizer "etiqueta", "linha", "planilha", nunca "node", "payload", "webhook"); todos os nomes de pessoas e e-mails de contato são fictícios e isso é dito no documento; nada de dado real.
 
-- [ ] **Passo 1: Guia do financeiro**
+- [x] **Passo 1: Guia do financeiro**
 
 `docs/entrega/4-guia-do-financeiro.md`:
 ```markdown
@@ -5259,7 +5259,7 @@ Use quando a nota não chegou por e-mail: baixada de um portal, recebida por out
 - **Revisão:** nota registrada que precisa de conferência humana antes de seguir.
 ```
 
-- [ ] **Passo 2: LEIA-ME**
+- [x] **Passo 2: LEIA-ME**
 
 `docs/entrega/0-LEIA-ME.md`:
 ```markdown
@@ -5317,7 +5317,7 @@ Mesmo assim, escolhi o n8n para a entrega: é gratuito, o fluxo pode ser exporta
 - A planilha não tem trava de unicidade: a proteção vem do processamento em sequência, das checagens antes de gravar e das colunas técnicas protegidas.
 ```
 
-- [ ] **Passo 3: Desenho da solução (2 páginas)**
+- [x] **Passo 3: Desenho da solução (2 páginas)**
 
 `docs/entrega/1-desenho-da-solucao.html`:
 ```html
@@ -5491,7 +5491,7 @@ Mesmo assim, escolhi o n8n para a entrega: é gratuito, o fluxo pode ser exporta
 </html>
 ```
 
-- [ ] **Passo 4: Instruções de importação, modelo de credenciais e roteiro do vídeo**
+- [x] **Passo 4: Instruções de importação, modelo de credenciais e roteiro do vídeo**
 
 `docs/entrega/2-fluxo-n8n-LEIA-ME.md`:
 ```markdown
@@ -5570,7 +5570,7 @@ Os nodes Code contêm as bibliotecas de regras embutidas (cabeçalhos `// ----- 
 Exportar como `entrega/3-video.mp4` (H.264). Se passar de 3:00, encurtar as falas das cenas 2 e 6.
 ```
 
-- [ ] **Passo 5: Gerador dos PDFs**
+- [x] **Passo 5: Gerador dos PDFs**
 
 `scripts/gerar-pdfs-docs.mjs`:
 ```js

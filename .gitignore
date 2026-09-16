@@ -3,6 +3,6 @@ infra/.env
 n8n/config.local.json
 n8n/workflows/
 testdata/saida/
-entrega/
+/entrega/
 *.log
 .DS_Store

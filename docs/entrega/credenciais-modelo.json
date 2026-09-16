@@ -1,0 +1,7 @@
+[
+  { "id": "nfGmailOAuth0001", "name": "NF · Gmail", "type": "gmailOAuth2", "data": { "clientId": "", "clientSecret": "" } },
+  { "id": "nfPlanilhasOAuth", "name": "NF · Google Planilhas", "type": "googleSheetsOAuth2Api", "data": { "clientId": "", "clientSecret": "" } },
+  { "id": "nfDriveOAuth0001", "name": "NF · Google Drive", "type": "googleDriveOAuth2Api", "data": { "clientId": "", "clientSecret": "" } },
+  { "id": "nfGeminiApiKey01", "name": "NF · Gemini API", "type": "httpHeaderAuth", "data": { "name": "x-goog-api-key", "value": "" } },
+  { "id": "nfSmtpAlertas001", "name": "NF · SMTP alertas", "type": "smtp", "data": { "user": "", "password": "", "host": "smtp.gmail.com", "port": 465, "secure": true } }
+]

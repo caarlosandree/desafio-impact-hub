@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Desenho da solução — Notas fiscais de fornecedores PJ</title>
+<style>
+  @page { size: A4; margin: 11mm 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 9.2px; line-height: 1.32; color: #1a1a1a; margin: 0; }
+  h1 { font-size: 16px; margin: 0 0 2px; } h2 { font-size: 11px; margin: 9px 0 4px; color: #0b5d4b; border-bottom: 1.5px solid #0b5d4b; padding-bottom: 1px; }
+  .sub { color: #555; margin-bottom: 6px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  th, td { border: 1px solid #c9d3d0; padding: 2.5px 4px; text-align: left; vertical-align: top; }
+  th { background: #e8f2ef; }
+  .pagina { page-break-after: always; } .pagina:last-child { page-break-after: auto; }
+  .duas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  ul { margin: 2px 0 4px 14px; padding: 0; } li { margin-bottom: 1.5px; }
+  .falha { color: #b3261e; font-weight: bold; }
+  svg text { font-family: Arial, Helvetica, sans-serif; }
+</style>
+</head>
+<body>
+<section class="pagina">
+  <h1>Notas fiscais de fornecedores PJ — desenho da solução</h1>
+  <div class="sub">Da chegada do e-mail à aprovação do gestor e à visibilidade do financeiro · Trecho 1 implementado em n8n 2.38.7 · Trechos 2 e 3 desenhados</div>
+
+  <svg viewBox="0 0 760 318" width="100%" role="img" aria-label="Fluxo em 8 etapas">
+    <defs><marker id="seta" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#0b5d4b"/></marker></defs>
+    <rect x="2" y="2" width="756" height="170" rx="8" fill="#f3faf7" stroke="#0b5d4b"/>
+    <text x="12" y="18" font-size="11" font-weight="bold" fill="#0b5d4b">TRECHO 1 — implementado</text>
+    <g font-size="9">
+      <rect x="12" y="30" width="110" height="20" rx="4" fill="#fff" stroke="#888"/><text x="18" y="44">Gmail · caixa técnica</text>
+      <rect x="12" y="56" width="110" height="20" rx="4" fill="#fff" stroke="#888"/><text x="18" y="70">Formulário (login)</text>
+      <rect x="12" y="82" width="110" height="20" rx="4" fill="#fff" stroke="#888"/><text x="18" y="96">Varredura 8h–19h</text>
+    </g>
+    <g font-size="10" font-weight="bold" fill="#fff">
+      <rect x="140" y="46" width="98" height="40" rx="6" fill="#0b5d4b"/><text x="152" y="63">1 Recepção</text><text x="152" y="77" font-weight="normal" font-size="8.5">padroniza entrada</text>
+      <rect x="258" y="46" width="98" height="40" rx="6" fill="#0b5d4b"/><text x="270" y="63">2 Extração</text><text x="270" y="77" font-weight="normal" font-size="8.5">XML direto · Gemini</text>
+      <rect x="376" y="46" width="98" height="40" rx="6" fill="#0b5d4b"/><text x="388" y="63">3 Validação</text><text x="388" y="77" font-weight="normal" font-size="8.5">16 regras fixas</text>
+      <rect x="494" y="46" width="98" height="40" rx="6" fill="#0b5d4b"/><text x="506" y="63">4 Duplicidade</text><text x="506" y="77" font-weight="normal" font-size="8.5">hash · chave</text>
+      <rect x="612" y="46" width="136" height="40" rx="6" fill="#0b5d4b"/><text x="624" y="63">5 Registro</text><text x="624" y="77" font-weight="normal" font-size="8.5">Drive → planilha → etiqueta</text>
+    </g>
+    <g stroke="#0b5d4b" stroke-width="1.6" marker-end="url(#seta)">
+      <line x1="122" y1="40" x2="138" y2="60"/><line x1="122" y1="66" x2="138" y2="66"/><line x1="122" y1="92" x2="138" y2="72"/>
+      <line x1="238" y1="66" x2="256" y2="66"/><line x1="356" y1="66" x2="374" y2="66"/><line x1="474" y1="66" x2="492" y2="66"/><line x1="592" y1="66" x2="610" y2="66"/>
+    </g>
+    <g font-size="8.5" fill="#333">
+      <text x="140" y="102">memória da execução</text>
+      <text x="258" y="102">Gemini: só o que o XML</text><text x="258" y="112">não resolve (inline)</text>
+      <text x="376" y="102">—</text>
+      <text x="494" y="102">aba Arquivos · aba Notas</text>
+      <text x="612" y="102">Drive NF/{empresa}/{mês}</text><text x="612" y="112">planilha · etiqueta Gmail</text>
+    </g>
+    <g font-size="9" class="falha" fill="#b3261e" font-weight="bold">
+      <text x="140" y="130">⚠1 destinatário fora da aba Empresas → Revisão</text>
+      <text x="140" y="143">⚠2 sem anexo, zip, PDF com senha, XML municipal → Revisão</text>
+      <text x="140" y="156">⚠3 Gemini/Google fora → 3 tentativas → NF/erro + ocorrência + alerta SMTP</text>
+      <text x="494" y="130">⚠4 duplicata → ocorrência, sem gravar</text>
+      <text x="494" y="143">⚠5 falha no meio → retomada</text>
+      <text x="494" y="156">⚠6 n8n parado → varredura + sinal de vida</text>
+    </g>
+    <rect x="2" y="180" width="440" height="134" rx="8" fill="#f7f7fb" stroke="#555a8a"/>
+    <text x="12" y="196" font-size="11" font-weight="bold" fill="#555a8a">TRECHO 2 — desenho</text>
+    <g font-size="10" font-weight="bold" fill="#fff">
+      <rect x="14" y="208" width="190" height="42" rx="6" fill="#555a8a"/><text x="24" y="225">6 Complemento</text><text x="24" y="240" font-weight="normal" font-size="8.5">cadastro: centro de custo, aprovador, prazo</text>
+      <rect x="236" y="208" width="196" height="42" rx="6" fill="#555a8a"/><text x="246" y="225">7 Aprovação</text><text x="246" y="240" font-weight="normal" font-size="8.5">WhatsApp Cloud API · botões</text>
+    </g>
+    <line x1="204" y1="229" x2="234" y2="229" stroke="#555a8a" stroke-width="1.6" marker-end="url(#seta)"/>
+    <g font-size="8.5" fill="#333">
+      <text x="14" y="266">abas Fornecedores e Centros de custo; fornecedor sem cadastro → Revisão</text>
+      <text x="14" y="279">1 dia útil sem resposta → lembrete · 2 dias → substituto + aviso ao financeiro</text>
+      <text x="14" y="292">vencimento em ≤ 3 dias úteis → alerta ao financeiro · API fora → aprovação por e-mail</text>
+      <text x="14" y="305">mensagem sem CPF nem dados bancários; PDF só a pedido do gestor</text>
+    </g>
+    <rect x="452" y="180" width="306" height="134" rx="8" fill="#fbf7f1" stroke="#8a6d3b"/>
+    <text x="462" y="196" font-size="11" font-weight="bold" fill="#8a6d3b">TRECHO 3 — desenho</text>
+    <rect x="464" y="208" width="282" height="42" rx="6" fill="#8a6d3b"/>
+    <text x="474" y="225" font-size="10" font-weight="bold" fill="#fff">8 Visibilidade</text><text x="474" y="240" font-size="8.5" fill="#fff">planilha como painel · resumo diário às 8h</text>
+    <g font-size="8.5" fill="#333">
+      <text x="464" y="266">filtros por status, empresa e vencimento</text>
+      <text x="464" y="279">resumo: em revisão, aguardando &gt; 2 dias úteis,</text>
+      <text x="464" y="292">vencendo em 5 dias, reprovadas ontem</text>
+      <text x="464" y="305">financeiro marca Paga após pagar no banco</text>
+    </g>
+  </svg>
+
+  <h2>Status da nota</h2>
+  <p><b>Extraída</b> ou <b>Revisão</b> no trecho 1 → a revisão resolvida pelo financeiro volta a <b>Extraída</b> → <b>Aguardando aprovação</b> → <b>Aprovada</b> ou <b>Reprovada</b> → <b>Paga</b>. O complemento do trecho 2 pode devolver a nota para Revisão.</p>
+
+  <div class="duas">
+    <div>
+      <h2>Onde os dados ficam e por quanto tempo</h2>
+      <table>
+        <tr><th>Onde</th><th>O que</th><th>Tempo</th></tr>
+        <tr><td>Caixa técnica</td><td>cópia de trabalho do e-mail</td><td>90 dias</td></tr>
+        <tr><td>Drive <code>NF/</code></td><td>PDF e XML, pasta restrita</td><td>prazo fiscal (~5 anos)</td></tr>
+        <tr><td>Planilha</td><td>só o necessário para pagar</td><td>prazo fiscal</td></tr>
+        <tr><td>n8n</td><td>só execuções com erro</td><td>7 dias</td></tr>
+        <tr><td>Gemini (pago)</td><td>arquivos que o XML não resolve</td><td>até 55 dias (abuso)</td></tr>
+        <tr><td>WhatsApp</td><td>fornecedor, valor, vencimento, CC</td><td>celular do gestor</td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Dados pessoais (LGPD)</h2>
+      <ul>
+        <li>Nome de MEI na razão social, CPF em cadastro antigo, e-mail e telefone em assinatura, chave PIX em boleto, celular dos gestores.</li>
+        <li><b>Minimização:</b> a IA não tem campo para CPF, endereço, telefone ou banco; com XML, a nota nem vai para a IA; arquivos inline, sem File API; CPF só mascarado; nomes de arquivo e alertas sem dado pessoal.</li>
+        <li><b>Base legal:</b> obrigação legal de guarda fiscal (art. 7º, II) e execução de contrato (art. 7º, V).</li>
+        <li><b>Antes de produção, a encarregada de dados</b> registra a operação, confirma Google e Meta como operadores, valida a transferência internacional (art. 33) e aprova os prazos.</li>
+      </ul>
+    </div>
+  </div>
+  <h2>Ferramentas e justificativas</h2>
+  <table>
+    <tr><th>Ferramenta</th><th>Papel</th><th>Custo</th><th>Segurança</th><th>Curva de aprendizado</th></tr>
+    <tr><td>n8n self-hosted 2.38.7</td><td>Orquestração</td><td>Gratuito, servidor próprio</td><td>Dados no servidor da empresa; retenção configurável</td><td>Mantido pelo técnico; o financeiro não abre</td></tr>
+    <tr><td>Gmail (Workspace)</td><td>Entrada e etiquetas</td><td>Já contratado</td><td>Contas e permissões corporativas</td><td>Nenhuma</td></tr>
+    <tr><td>Google Planilhas</td><td>Registro e painel</td><td>Já contratado</td><td>Acesso só do financeiro; histórico de versões</td><td>Nenhuma</td></tr>
+    <tr><td>Google Drive</td><td>Arquivos</td><td>Já contratado</td><td>Pasta restrita, sem link público</td><td>Nenhuma</td></tr>
+    <tr><td>Gemini API (plano pago)</td><td>Ler PDF e imagem</td><td>~US$ 1 a 3/mês</td><td>Sem treino com os dados; envio mínimo</td><td>Invisível ao financeiro</td></tr>
+    <tr><td>WhatsApp Cloud API oficial</td><td>Aprovação (trecho 2)</td><td>Por modelo entregue; utilidade grátis na janela de 24 h</td><td>Canal oficial; sem acesso a conversas pessoais</td><td>Nenhuma para o gestor</td></tr>
+  </table>
+  <p><b>Alternativas descartadas:</b> <b>Make/Zapier</b> (cota mensal e dados na nuvem do fornecedor) · <b>Postgres como fonte da verdade</b> (mais uma ferramenta e mais dependência do técnico) · <b>Data Tables do n8n</b> (o financeiro teria de abrir o n8n) · <b>IMAP</b> (não aplica etiquetas, que garantem que nada se perde) · <b>Google Chat</b> (gestores sem hábito de acompanhar) · <b>sistema próprio (DocSend)</b> (robusto, mas exige servidor e desenvolvedor; é evolução) · <b>Evolution API</b> (gratuita, mas no modo não oficial contraria os termos do WhatsApp e pode ter o número bloqueado, e a sessão acessa todas as conversas; a linha 2.4.0 exige ativação em servidor de licenças externo que recebe contadores e IP; serve só para protótipo com número dedicado).</p>
+</section>
+
+<section class="pagina">
+  <div class="duas">
+    <div>
+      <h2>Falhas e duplicidade</h2>
+      <ul>
+        <li><b>Conteúdo ruim</b> não é erro: vira <b>Revisão</b> com motivo em português e o financeiro resolve (tabela no guia).</li>
+        <li><b>Duplicata</b> não é gravada: vira ocorrência e o e-mail recebe <code>NF/duplicada</code>. Duas barreiras: hash SHA-256 do arquivo (antes da IA) e chave de acesso ou CNPJ do prestador + número. O fluxo nunca apaga nem sobrescreve.</li>
+        <li><b>Falha técnica</b>: 3 tentativas; se persistir, <code>NF/erro</code>, ocorrência e alerta por SMTP (credencial separada do Google). O que escapar cai no Error Workflow.</li>
+      </ul>
+      <h2>Garantias</h2>
+      <ul>
+        <li><b>Nenhum e-mail se perde:</b> a etiqueta é o último passo e a varredura horária pega todo e-mail sem etiqueta com mais de 1 hora.</li>
+        <li><b>Reprocessar é seguro:</b> id e nomes de arquivo determinísticos; retomada pela origem; hashes gravados por último. Basta tirar <code>NF/erro</code> ou reenviar os mesmos arquivos no formulário.</li>
+        <li><b>O alerta não depende do que quebrou:</b> sinal de vida às 8h; se não chega, o n8n está parado.</li>
+      </ul>
+    </div>
+    <div>
+      <h2>Responsáveis</h2>
+      <table>
+        <tr><th>Papel</th><th>Responsabilidade</th></tr>
+        <tr><td>Analista de contas a pagar</td><td>Fila de revisão diária; formulário; aba Empresas</td></tr>
+        <tr><td>Coordenação financeira</td><td>Dona do processo; aprova regras e acessos</td></tr>
+        <tr><td>Analista de IA (dono técnico)</td><td>Alertas, credenciais, instrução da IA, reprocessamento, contas do formulário</td></tr>
+        <tr><td>Substituto técnico</td><td>Mesmo acesso; cobre ausências com a documentação</td></tr>
+        <tr><td>Encarregada de dados</td><td>Valida antes de produção e a cada mudança com dado pessoal</td></tr>
+      </table>
+      <p><b>Mudanças</b> na instrução da IA ou nas regras passam pela bateria de 26 casos e pela aprovação da coordenação.</p>
+      <h2>Principais riscos</h2>
+      <table>
+        <tr><th>Risco</th><th>Mitigação</th></tr>
+        <tr><td>IA lê valor errado que passa nas regras</td><td>XML como fonte; regras de coerência; gestor aprova vendo valor; financeiro confere antes de pagar</td></tr>
+        <tr><td>Injeção de instruções no PDF</td><td>Formato fechado, IA sem ferramentas, regras fixas, aprovação humana (teste na pasta 5)</td></tr>
+        <tr><td>Nota ou boleto fraudulento</td><td>O fluxo não paga; cadastro de fornecedores; conferência do beneficiário</td></tr>
+        <tr><td>Credencial do Google expira</td><td>Conta técnica e app interno; alerta SMTP separado; sinal de vida</td></tr>
+        <tr><td>Automação depende de uma pessoa</td><td>Substituto técnico, guia do financeiro e treinamento</td></tr>
+        <tr><td>n8n 3.0 (out/2026) com mudanças</td><td>Versão fixada; atualizar só após a bateria</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+</body>
+</html>
